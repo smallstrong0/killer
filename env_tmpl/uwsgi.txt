@@ -1,0 +1,24 @@
+[uwsgi]
+uid = nginx
+gid = nginx
+socket = 127.0.0.1:${pid}
+master = true
+workers = ${workers_num}
+threads = 1
+vacuum = true
+pidfile = /var/run/uwsgi_${name}.pid
+
+
+daemonize = /var/log/uwsgi/uwsgi_${name}.log
+log-maxsize = 1000000
+log-truncate = true
+disable-logging = true
+
+
+reload-mercy = 3
+harakiri = 600
+reload-on-as = 256
+reload-on-rss = 256
+#module = index
+chdir = ${path}
+wsgi-file = index.py
