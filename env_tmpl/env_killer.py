@@ -7,7 +7,7 @@
 # @Software: PyCharm
 
 
-import os
+import sys, os
 import writer
 import time
 from settings import *
@@ -35,5 +35,16 @@ def run():
     ssh('ps aux | grep uwsgi_{}'.format(PROJECT_NAME))
 
 
+def destroy():
+    ssh('sudo service uwsgi_{} stop'.format(PROJECT_NAME))
+    for path in writer.get_path():
+        ssh('sudo rm -rf {}'.format(path))
+
+
 if __name__ == '__main__':
-    run()
+    argv = sys.argv
+    if len(argv) > 1:
+        if argv[1] == "rm":
+            destroy()
+    else:
+        run()

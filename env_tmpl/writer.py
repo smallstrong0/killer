@@ -12,16 +12,18 @@ from string import Template
 from env_killer import *
 from settings import *
 
+PATH = ["/etc/nginx/conf.d/{}.conf".format(PROJECT_NAME), "/etc/uwsgi_{}.ini".format(PROJECT_NAME),
+        "/etc/init.d/uwsgi_{}".format(PROJECT_NAME)]
+
 
 # Template使用参考 https://www.cnblogs.com/subic/p/6552752.html
 def nginx_writer():
     lines = []
-    class_file = open("/etc/nginx/conf.d/{}.conf".format(PROJECT_NAME), "wt")
+    class_file = open(PATH[0], "wt")
     template_file = open(os.getcwd() + '/nginx.txt', 'r')
     lines.append(Template(template_file.read()).safe_substitute
         (
         server_name=SERVER_NAME,
-        path=PROJECT_NAME,
         pid=PID,
     ))
     class_file.writelines(lines)
@@ -30,7 +32,7 @@ def nginx_writer():
 
 def uwsgi_writer():
     lines = []
-    class_file = open("/etc/uwsgi_{}.ini".format(PROJECT_NAME), "wt")
+    class_file = open(PATH[1], "wt")
     template_file = open(os.getcwd() + '/uwsgi.txt', 'r')
     lines.append(Template(template_file.read()).safe_substitute
         (
@@ -45,7 +47,7 @@ def uwsgi_writer():
 
 def shell_writer():
     lines = []
-    class_file = open("/etc/init.d/uwsgi_{}".format(PROJECT_NAME), "wt")
+    class_file = open(PATH[2], "wt")
     template_file = open(os.getcwd() + '/shell.txt', 'r')
     lines.append(Template(template_file.read()).safe_substitute
         (
@@ -53,3 +55,7 @@ def shell_writer():
     ))
     class_file.writelines(lines)
     class_file.close()
+
+
+def get_path():
+    return PATH

@@ -1,23 +1,26 @@
 server {
-    listen       80;
-    server_name  ${server_name};
+    listen  80;
+    server_name ${server_name};
+    root /home/small;
+
     location / {
-        return 301 https://${server_name}${request_uri};
+        return 301 https://${server_name}$request_uri;
     }
+
+
 }
 
 server {
-    listen       8080;
-    listen       [::]:8080;
-    server_name  ${server_name};
-    root         /usr/share/nginx/html/;
-    index        index.html;
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/smallstrong.wang/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/smallstrong.wang/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 
-    gzip on;
-    gzip_min_length 1024;
-    gzip_types text/html text/plain text/css application/x-javascript text/javascript application/json;
+    server_name ${server_name};
+    root /home/small;
 
-    location /${path}/ {
+    location /api/{
         include uwsgi_params;
         uwsgi_pass 127.0.0.1:${pid};
     }

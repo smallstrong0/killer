@@ -22,3 +22,4 @@ reload-on-rss = 256
 #module = index
 chdir = ${path}
 wsgi-file = index.py
+callable = app
